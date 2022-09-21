@@ -154,4 +154,21 @@ export const lists: Lists = {
       model: relationship({ ref: 'Company.phone_model', many: true}),
     }
   }),
+  Livre: list({
+    fields: {
+      name: text(),
+      author_name: text(),
+      year: timestamp(),
+      genre: text(),
+      author_rel: relationship({ ref: 'Author.livre_rel', many: false}),
+    }
+  }),
+  Author: list({
+    fields: {
+      name: text(),
+      livre_name: text(),
+      age: text(),
+      livre_rel: relationship({ ref: 'Livre.author_rel', many: true}),
+    }
+  }),
 };

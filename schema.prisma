@@ -56,3 +56,23 @@ model Phone_Model {
   version String    @default("")
   model   Company[] @relation("Company_phone_model")
 }
+
+model Livre {
+  id           String    @id @default(cuid())
+  name         String    @default("")
+  author_name  String    @default("")
+  year         DateTime?
+  genre        String    @default("")
+  author_rel   Author?   @relation("Livre_author_rel", fields: [author_relId], references: [id])
+  author_relId String?   @map("author_rel")
+
+  @@index([author_relId])
+}
+
+model Author {
+  id         String  @id @default(cuid())
+  name       String  @default("")
+  livre_name String  @default("")
+  age        String  @default("")
+  livre_rel  Livre[] @relation("Livre_author_rel")
+}

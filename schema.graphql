@@ -438,6 +438,144 @@ input CompanyRelateToManyForCreateInput {
   connect: [CompanyWhereUniqueInput!]
 }
 
+type Livre {
+  id: ID!
+  name: String
+  author_name: String
+  year: DateTime
+  genre: String
+  author_rel: Author
+}
+
+input LivreWhereUniqueInput {
+  id: ID
+}
+
+input LivreWhereInput {
+  AND: [LivreWhereInput!]
+  OR: [LivreWhereInput!]
+  NOT: [LivreWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  author_name: StringFilter
+  year: DateTimeNullableFilter
+  genre: StringFilter
+  author_rel: AuthorWhereInput
+}
+
+input LivreOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  author_name: OrderDirection
+  year: OrderDirection
+  genre: OrderDirection
+}
+
+input LivreUpdateInput {
+  name: String
+  author_name: String
+  year: DateTime
+  genre: String
+  author_rel: AuthorRelateToOneForUpdateInput
+}
+
+input AuthorRelateToOneForUpdateInput {
+  create: AuthorCreateInput
+  connect: AuthorWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LivreUpdateArgs {
+  where: LivreWhereUniqueInput!
+  data: LivreUpdateInput!
+}
+
+input LivreCreateInput {
+  name: String
+  author_name: String
+  year: DateTime
+  genre: String
+  author_rel: AuthorRelateToOneForCreateInput
+}
+
+input AuthorRelateToOneForCreateInput {
+  create: AuthorCreateInput
+  connect: AuthorWhereUniqueInput
+}
+
+type Author {
+  id: ID!
+  name: String
+  livre_name: String
+  age: String
+  livre_rel(
+    where: LivreWhereInput! = {}
+    orderBy: [LivreOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Livre!]
+  livre_relCount(where: LivreWhereInput! = {}): Int
+}
+
+input AuthorWhereUniqueInput {
+  id: ID
+}
+
+input AuthorWhereInput {
+  AND: [AuthorWhereInput!]
+  OR: [AuthorWhereInput!]
+  NOT: [AuthorWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  livre_name: StringFilter
+  age: StringFilter
+  livre_rel: LivreManyRelationFilter
+}
+
+input LivreManyRelationFilter {
+  every: LivreWhereInput
+  some: LivreWhereInput
+  none: LivreWhereInput
+}
+
+input AuthorOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  livre_name: OrderDirection
+  age: OrderDirection
+}
+
+input AuthorUpdateInput {
+  name: String
+  livre_name: String
+  age: String
+  livre_rel: LivreRelateToManyForUpdateInput
+}
+
+input LivreRelateToManyForUpdateInput {
+  disconnect: [LivreWhereUniqueInput!]
+  set: [LivreWhereUniqueInput!]
+  create: [LivreCreateInput!]
+  connect: [LivreWhereUniqueInput!]
+}
+
+input AuthorUpdateArgs {
+  where: AuthorWhereUniqueInput!
+  data: AuthorUpdateInput!
+}
+
+input AuthorCreateInput {
+  name: String
+  livre_name: String
+  age: String
+  livre_rel: LivreRelateToManyForCreateInput
+}
+
+input LivreRelateToManyForCreateInput {
+  create: [LivreCreateInput!]
+  connect: [LivreWhereUniqueInput!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -483,6 +621,18 @@ type Mutation {
   updatePhoneModels(data: [Phone_ModelUpdateArgs!]!): [Phone_Model]
   deletePhone_Model(where: Phone_ModelWhereUniqueInput!): Phone_Model
   deletePhoneModels(where: [Phone_ModelWhereUniqueInput!]!): [Phone_Model]
+  createLivre(data: LivreCreateInput!): Livre
+  createLivres(data: [LivreCreateInput!]!): [Livre]
+  updateLivre(where: LivreWhereUniqueInput!, data: LivreUpdateInput!): Livre
+  updateLivres(data: [LivreUpdateArgs!]!): [Livre]
+  deleteLivre(where: LivreWhereUniqueInput!): Livre
+  deleteLivres(where: [LivreWhereUniqueInput!]!): [Livre]
+  createAuthor(data: AuthorCreateInput!): Author
+  createAuthors(data: [AuthorCreateInput!]!): [Author]
+  updateAuthor(where: AuthorWhereUniqueInput!, data: AuthorUpdateInput!): Author
+  updateAuthors(data: [AuthorUpdateArgs!]!): [Author]
+  deleteAuthor(where: AuthorWhereUniqueInput!): Author
+  deleteAuthors(where: [AuthorWhereUniqueInput!]!): [Author]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -553,6 +703,22 @@ type Query {
   ): [Phone_Model!]
   phone_Model(where: Phone_ModelWhereUniqueInput!): Phone_Model
   phoneModelsCount(where: Phone_ModelWhereInput! = {}): Int
+  livres(
+    where: LivreWhereInput! = {}
+    orderBy: [LivreOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Livre!]
+  livre(where: LivreWhereUniqueInput!): Livre
+  livresCount(where: LivreWhereInput! = {}): Int
+  authors(
+    where: AuthorWhereInput! = {}
+    orderBy: [AuthorOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Author!]
+  author(where: AuthorWhereUniqueInput!): Author
+  authorsCount(where: AuthorWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
